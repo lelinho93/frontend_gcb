@@ -1,9 +1,12 @@
 import './App.css';
+import { Register } from '../src/components/Register'
 
 function App() {
   return (
     <div className="App">
-      <Router/>
+      <Register>
+
+      </Register>
     </div>
   );
 }
