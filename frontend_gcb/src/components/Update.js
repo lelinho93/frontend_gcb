@@ -33,9 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Register() {
+export function Update() {
   
-  const classes = useStyles();
+  const classes = useStyles()
   const history = useHistory()
 
   const [specialty, setSpecialty] = useState([]);
@@ -54,9 +54,9 @@ export function Register() {
 
     const onSubmitForm = (event) => {    
         event.preventDefault() 
-        axios.post("http://localhost:3306/doctor", body)
+        axios.put("http://localhost:3306/doctor/update", body)
       .then(response => {
-          alert("Cadastro efetuado!")    
+          alert("Informações atualizadas!")    
       })
       .catch(error => {
           console.log(error.response.data)
@@ -69,8 +69,8 @@ export function Register() {
         onChange(value, name)
     }   
 
-    const goToUpdate = () =>{
-      history.push("/update")
+    const goToRegister = () => {
+      history.push("/")
     }
 
     const [address, setAddress] = useState('')
@@ -100,7 +100,8 @@ export function Register() {
           <LibraryBooksIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Cadastro de profissional
+          Preencha o CRM, a ESPECIALIDADE e as demais informações que desejar atualizar
+         
         </Typography>
         <form className={classes.form} noValidate onSubmit={onSubmitForm}>
           <Grid container spacing={2}>
@@ -235,7 +236,7 @@ export function Register() {
             color="primary"
             className={classes.submit}
           >
-            Cadastrar
+            Atualizar informações
           </Button>
           <Grid container justify="flex-end">            
           </Grid>
@@ -246,12 +247,10 @@ export function Register() {
             variant="contained"
             color="secondary"
             className={classes.submit}
-            onClick={goToUpdate}
+            onClick={goToRegister}
           >
-           Atualizar cadastro
+           Ir para o cadastro
           </Button>
-          <Grid container justify="flex-end">            
-          </Grid>
       </div>      
     </Container>
   );
