@@ -8,8 +8,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Select from './Select';
 import axios from 'axios';
+import { useForm } from '../hooks/useForm';
+import MultipleSelect from './Select';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -32,6 +33,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Register() {
+  
+  const classes = useStyles();
+
+  const [specialty, setSpecialty] = useState([]);
+
+  const { form, onChange } = useForm({name: "", crm: "", phone: "", cellphone: "", cep: "" })
+
+   const body = {
+     name: form.name,
+     crm: form.crm,
+     phone: form.phone,
+     cellphone: form.cellphone,
+     cep: form.cep,
+     specialty: specialty
+   }
+   console.log(body)
+
+    const onSubmitForm = (event) => {    
+        event.preventDefault() 
+        axios.post("http://localhost:3306/doctor", body)
+      .then(response => {
+          alert("Cadastro efetuado!")    
+      })
+      .catch(error => {
+          console.log(error.response.data)
+      })     
+    }
+    
+    const handleInputChange = (event) => {
+        const { value, name } = event.target
+
+        onChange(value, name)
+    }   
+
     const [address, setAddress] = useState('')
     const onBlurCep = (event) => {
 
@@ -50,9 +85,7 @@ export function Register() {
         })
     }
 
-
-  const classes = useStyles();
-
+  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -63,18 +96,20 @@ export function Register() {
         <Typography component="h1" variant="h5">
           Cadastro de profissional
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={onSubmitForm}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                autoComplete="name"
+                name="name"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
+                id="name"
                 label="Nome"
                 autoFocus
+                value={form.name}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -86,6 +121,8 @@ export function Register() {
                 label="CRM"
                 name="crm"
                 autoComplete="crm"
+                value={form.crm}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -98,6 +135,8 @@ export function Register() {
                 id="phone"
                 label="Telefone"
                 autoFocus
+                value={form.phone}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -109,6 +148,8 @@ export function Register() {
                 label="Celular"
                 name="cellphone"
                 autoComplete="cellphone"
+                value={form.cellphone}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -116,11 +157,13 @@ export function Register() {
                 variant="outlined"
                 required
                 fullWidth
-                id="postalcode"
+                id="cep"
                 label="CEP"
-                name="postalcode"
-                autoComplete="postalcode"
+                name="cep"
+                autoComplete="cep"
+                value={form.cep}
                 onBlur={onBlurCep}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -167,10 +210,17 @@ export function Register() {
                 autoComplete="uf"
                 value={address.uf}
               />
-            </Grid>           
-            <Grid item xs={12} sm={1}>
-                <Select/>
             </Grid>
+            <Grid item xs={12} sm={6}>           
+              <MultipleSelect
+              name="specialty"
+              label="Especialidade médica"
+              specialty={specialty}
+              onChange={onChange}
+              value={form.specialty}
+              setSpecialty={setSpecialty}
+              />              
+            </Grid>    
           </Grid>
           <Button
             type="submit"

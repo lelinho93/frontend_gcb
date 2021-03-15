@@ -10,7 +10,7 @@ import Chip from '@material-ui/core/Chip';
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 370,
     maxWidth: 300,
   },
   chips: {
@@ -56,35 +56,26 @@ function getStyles(name, specialty, theme) {
   };
 }
 
-export default function MultipleSelect() {
+export default function MultipleSelect(props) {
+    
   const classes = useStyles();
-  const theme = useTheme();
-  const [specialty, setSpecialty] = React.useState([]);
+  const theme = useTheme();  
+  
 
   const handleChange = (event) => {
-    setSpecialty(event.target.value);
-  };
-
-  const handleChangeMultiple = (event) => {
-    const { options } = event.target;
-    const value = [];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        value.push(options[i].value);
-      }
-    }
-    setSpecialty(value);
+    props.setSpecialty(event.target.value);
   };
 
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-mutiple-chip-label">Especialidade</InputLabel>
-        <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
+        <InputLabel id="demo-mutiple-chip-label">Especialidades</InputLabel>
+        <Select         
+          id="specialty"
+          name="specialty"
           multiple
-          value={specialty}
+          value={props.specialty}
+          specialty={props.specialty}
           onChange={handleChange}
           input={<Input id="select-multiple-chip" />}
           renderValue={(selected) => (
@@ -97,7 +88,7 @@ export default function MultipleSelect() {
           MenuProps={MenuProps}
         >
           {names.map((name) => (
-            <MenuItem key={name} value={name} style={getStyles(name, specialty, theme)}>
+            <MenuItem key={name} value={name} style={getStyles(name, props.specialty, theme)}>
               {name}
             </MenuItem>
           ))}
