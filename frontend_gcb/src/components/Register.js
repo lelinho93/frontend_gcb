@@ -164,7 +164,7 @@ export function Register() {
                 required
                 fullWidth
                 id="cep"
-                label="CEP"
+                label="CEP 00000-000"
                 name="cep"
                 autoComplete="cep"
                 value={form.cep}
